@@ -1,4 +1,4 @@
-#Generation with GPT2 with KV Caching, takes a total of ~2.04 seconds
+#Generation with GPT2 with KV Caching, takes a total of ~2.04 seconds with 50 tokens, ~4.13 seconds with 100 tokens
 
 import matplotlib.pyplot as plt
 import numpy as np

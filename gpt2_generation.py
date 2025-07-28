@@ -1,4 +1,4 @@
-#Generation without KV Caching, takes a total of ~2.6 seconds
+#Generation without KV Caching, takes a total of ~2.6 seconds for 50 tokens, ~4.2 seconds for 100 tokens
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,8 +10,8 @@ from transformers import DynamicCache
 
 #Loading up the model
 model_name = 'gpt2'
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
+tokenizer = AutoTokenizer.from_pretrained(model_name, local_files_only = True)
+model = AutoModelForCausalLM.from_pretrained(model_name, local_files_only = True)
 
 print(model)
 
@@ -49,10 +49,10 @@ for _ in range(100):
     #Below, we append the new token id to the existing tokens stored in inputs. We also update the mask, 1 signifies pay attention and all positions are 1 since they are all important to the sentence, for padding stuff we can have 0.
     next_inputs = {
         "input_ids": torch.cat(
-            [inputs["input_ids"], next_token_id.reshape(1,1)], dim=1
+            [next_inputs["input_ids"], next_token_id.reshape((1,1))], dim=1
         ),
         "attention_mask": torch.cat(
-            [inputs["attention_mask"], torch.tensor([[1]])], dim=1
+            [next_inputs["attention_mask"], torch.tensor([[1]])], dim=1
         ),
     }
     # Decode the token into word, this is highly likely a linear layer that just maps embeddings to a word list
