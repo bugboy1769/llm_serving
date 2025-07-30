@@ -13,7 +13,7 @@ model = AutoModelForCausalLM.from_pretrained(model_name)
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 model = model.to(device)
 
-prompt = "Complete: Generality is a curse that afflicts"
+prompt = "quantum mechanics deals with"
 
 inputs = tokenizer(prompt, return_tensors = 'pt')
 inputs = inputs.to(device)

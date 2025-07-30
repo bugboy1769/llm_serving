@@ -12,10 +12,8 @@ model_dict = {
     "m4": "EleutherAI/gpt-neo-1.3B",
 }
 
-tokenizer = AutoTokenizer.from_pretrained(model_dict["m2"], force_download=True, 
-    resume_download=True)
-model = AutoModelForCausalLM.from_pretrained(model_dict["m2"], force_download=True, 
-    resume_download=True)
+tokenizer = AutoTokenizer.from_pretrained(model_dict["m2"]) #, force_download=True, resume_download=True)
+model = AutoModelForCausalLM.from_pretrained(model_dict["m2"]) #, force_download=True, resume_download=True)
 model = model.to("mps")
 model.config.pad_token_id = model.config.eos_token_id
 
@@ -72,6 +70,7 @@ def gen_response(llm_inputs, num_tokens):
             "position_ids": next_input["position_ids"][:, -1].unsqueeze(-1) + 1,
             "past_key_values": DynamicCache.from_legacy_cache(past_key_values),
         }
+        print(f"attention_mask: {next_input['attention_mask'].shape[1]}")
         #print(f"next_input: {next_input}")
         #here is the actual decoding of the generated token id
         next_tokens = tokenizer.batch_decode(next_token_ids)
@@ -102,7 +101,7 @@ def generate_batch_response(prompts, queue_size, batch_size, max_tokens):
     t0 = time.time()
     #print(f"Prompt: {prompts}")
     batches = batch_creator(prompts, queue_size, batch_size, max_tokens)
-    #print(f"BATCHES: {batches}")
+    print(f"BATCHES: {batches}")
     # print(f"batches: {[b[0][0] for b in batches]}")
     batch_list = [b[0] for b in batches]
     batch_prompts = [b[0] for b in batch_list]
