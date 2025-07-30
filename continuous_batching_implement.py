@@ -40,6 +40,7 @@ request_queue = [
 t0 = time.time()
 with tqdm(total = len(request_queue), desc = f"bs_:{batch_size}") as pbar:
     batch = init_batch(request_queue[:batch_size])
+    print(f"Test : {batch}")
     print(f"batch_:{batch.keys()}")
     cached_batch = generate_next_token(batch)
     print(f"cached_batch_:{cached_batch}")

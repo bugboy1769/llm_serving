@@ -103,8 +103,8 @@ def merge_batches(batch1, batch2):
     padded_kv1 = []
     for i in range(len(past_kv1)):
         k, v = past_kv1[i]
-        k = F.pad(k, (0, 0, padding1, 0), "constant", 0)
-        v = F.pad(v, (0, 0, padding1, 0), "constant", 0)
+        k = F.pad(k, (0, 0, 0, padding1), "constant", 0)
+        v = F.pad(v, (0, 0, 0, padding1), "constant", 0)
         padded_kv1.append((k,v))
 
     padded_kv2 = []
