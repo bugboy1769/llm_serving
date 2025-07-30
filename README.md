@@ -6,3 +6,5 @@ Currently in repo:
   * KV Caching - Doesn't work too well for llama style models have they have much more stringent implementations for passing past_key_values.
   * Continuous Batching - Currently fixing an error which causes kv caching to fail at the last token to be generated in the first batch.
   * Nice Graphs and Conceptual Comments
+
+ToDo: Quantization and LoRA.
