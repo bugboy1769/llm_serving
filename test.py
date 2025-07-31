@@ -12,11 +12,9 @@ model_dict = {
     "m4": "EleutherAI/gpt-neo-1.3B",
 }
 
-tokenizer = AutoTokenizer.from_pretrained(model_dict["m2"], force_download=True, 
-    resume_download=True)
-model = AutoModelForCausalLM.from_pretrained(model_dict["m2"], force_download=True, 
-    resume_download=True)
-model = model.to("mps")
+tokenizer = AutoTokenizer.from_pretrained(model_dict["m2"]) #, force_download=True, resume_download=True)
+model = AutoModelForCausalLM.from_pretrained(model_dict["m2"]) #, force_download=True, resume_download=True)
+#model = model.to("mps")
 model.config.pad_token_id = model.config.eos_token_id
 
 prompts = ["the quick brown fox jumps over the",
@@ -28,7 +26,7 @@ def tokenize_and_move(prompts):
     tokenizer.padding_side = "left"
     tokenizer.truncation_side = "left"
     out = tokenizer(prompts, padding = True, return_tensors = 'pt')
-    out = out.to("mps")
+    #out = out.to("mps")
     return out
 
 max_tokens = 50
@@ -68,7 +66,7 @@ def gen_response(llm_inputs, num_tokens):
         #this down here is solely creating the next input for autoregressive generation
         next_input = {
             "input_ids": next_token_ids.reshape((-1, 1)),
-            "attention_mask": torch.cat([next_input["attention_mask"], torch.ones(next_token_ids.shape[0], 1).to("mps")], dim=1),
+            "attention_mask": torch.cat([next_input["attention_mask"], torch.ones(next_token_ids.shape[0], 1)], dim=1),
             "position_ids": next_input["position_ids"][:, -1].unsqueeze(-1) + 1,
             "past_key_values": DynamicCache.from_legacy_cache(past_key_values),
         }
