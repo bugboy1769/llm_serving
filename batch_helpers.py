@@ -43,7 +43,7 @@ def get_next_input(batch, next_token_ids, past_key_values, next_tokens):
         "input_ids": next_token_ids.reshape((-1, 1)),
         "attention_mask": torch.cat([batch["attention_mask"], torch.ones((next_token_ids.shape[0], 1)).to(device)], dim = 1), #somehow Im querying batch["attention_mask"], this batch might be different than just (prompt, token) tuple
         "position_ids": batch["position_ids"][:, -1].unsqueeze(-1) + 1,
-        "past_key_values": DynamicCache.from_legacy_cache(past_key_values),
+        "past_key_values": past_key_values,
         "responses": [
             r1 + r2 for r1, r2 in zip(batch["responses"], next_tokens)
         ],
@@ -103,8 +103,8 @@ def merge_batches(batch1, batch2):
     padded_kv1 = []
     for i in range(len(past_kv1)):
         k, v = past_kv1[i]
-        k = F.pad(k, (0, 0, 0, padding1), "constant", 0)
-        v = F.pad(v, (0, 0, 0, padding1), "constant", 0)
+        k = F.pad(k, (0, 0, padding1, 0), "constant", 0)
+        v = F.pad(v, (0, 0, padding1, 0), "constant", 0)
         padded_kv1.append((k,v))
 
     padded_kv2 = []
