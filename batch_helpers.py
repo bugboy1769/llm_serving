@@ -5,6 +5,7 @@ import os
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import copy
+import numpy as np
 
 model_dict = {
     "m1": "gpt2",
@@ -61,13 +62,17 @@ def init_batch(requests):
     position_ids.masked_fill_(attention_mask == 0, 1)
     # past_key_values = []
 
-    return {
+    batch = {
         "position_ids": position_ids,
         "responses": copy.copy(prompts),
         "tokens_remaining": [r[1] for r in requests],
         #"past_key_values": DynamicCache.from_legacy_cache(past_key_values),
-        **inputs
+        **inputs,
     }
+    #print(f"batch: {batch}") -> 1st degbug statement
+
+    return batch
+
 
 def generate_next_token(batch):
 
@@ -82,6 +87,8 @@ def generate_next_token(batch):
     # }
 
     next_token_ids, past_key_values = generate_tokens_with_past(inputs)
+    print(f"Next Token IDs: {next_token_ids}")
+    print(f"Past Key Values: {len(past_key_values)}")
     next_tokens = tokenizer.batch_decode(next_token_ids)
 
     return get_next_input(batch, next_token_ids, past_key_values, next_tokens)

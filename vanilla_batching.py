@@ -14,10 +14,12 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 model_dict = {
     "m1": "gpt2",
     "m2": "HuggingFaceTB/SmolLM-135M",
+    "m3": "meta-llama/Llama-3.1-8B",
+    "m4": "google-t5/t5-small",
 }
 
-model = AutoModelForCausalLM.from_pretrained(model_dict["m1"], local_files_only = True)
-tokenizer = AutoTokenizer.from_pretrained(model_dict["m1"], local_files_only = True)
+model = AutoModelForCausalLM.from_pretrained(model_dict["m3"]) #, local_files_only = True)
+tokenizer = AutoTokenizer.from_pretrained(model_dict["m3"]) #, local_files_only = True)
 device = ("mps" if torch.backends.mps.is_available() else "cpu")
 model = model.to(device)
 

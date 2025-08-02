@@ -40,9 +40,11 @@ request_queue = [
 t0 = time.time()
 with tqdm(total = len(request_queue), desc = f"bs_:{batch_size}") as pbar:
     batch = init_batch(request_queue[:batch_size])
-    print(f"batch_:{batch.keys()}")
+    print(f"Batch: {batch.keys()}")  #-> 2nd debug statement
     cached_batch = generate_next_token(batch)
+    #print(f"Cached_Batch: {cached_batch}")
     request_queue = request_queue[batch_size:]
+    print(f"Request Queue: {request_queue}")
     i = 0
     while (
         len(request_queue) > 0 or cached_batch["input_ids"].size(0)
@@ -51,12 +53,14 @@ with tqdm(total = len(request_queue), desc = f"bs_:{batch_size}") as pbar:
         i += 1
         batch_capacity = batch_size - cached_batch["input_ids"].size(0)
         if batch_capacity > 0 and len(request_queue) > 0:
+            print("IF TEST")
             new_batch = init_batch(request_queue[:batch_capacity])
             new_batch = generate_next_token(new_batch)
             request_queue = request_queue[batch_capacity:]
 
             cached_batch = merge_batches(cached_batch, new_batch)
-            print(f"Debug_:{cached_batch.keys()}")
+            cach_len = cached_batch["past_key_values"]
+            print(f"Cached Batch Post Merge: {len(cach_len)}")
         
         cached_batch = generate_next_token(cached_batch)
         cached_batch, remove_indices = filter_batch(cached_batch)
