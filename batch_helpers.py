@@ -36,7 +36,7 @@ def generate_tokens_with_past(inputs):
     last_logits = logits[:, -1, :]
     next_token_ids = last_logits.argmax(dim = 1)
 
-    return next_token_ids, outputs.past_key_values
+    return next_token_ids, outputs.past_key_values #Shape past_key_values = (batch_size, num_heads_, seq_len, embedding_dim_per_head)
 
 def get_next_input(batch, next_token_ids, past_key_values, next_tokens):
 
